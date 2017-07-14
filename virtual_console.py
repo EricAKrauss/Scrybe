@@ -1,5 +1,5 @@
 import config
-import os
+import os, sys
 
 class cns():
     def __init__(self, settings=None):
@@ -34,21 +34,24 @@ class cns():
     ##   Starts at top left corner 
     ##     proceeds from left to right, top to bottom
     ##   Returns True if it successfully writes anything
-    def map(self, row, col, val):
+    def map(self, row, col, val, color=None):
         success = False
         for r in range(len(val)):
             for c in range(len(val[r])):
-                success = self.write(row+r, col+c, val[r][c]) or success
+                success = self.write(row+r, col+c, val[r][c], color) or success
 
     ## Returns True if it can write a char to the buffer
-    def write(self, r, c, v):
+    def write(self, r, c, v, color=None):
         buf = self.buffer
         if r < 0 or r >= len(buf):
             return False
         if c < 0 or c >= len(buf[r]):
             return False
         if hasattr(v, "__str__"):
-            self.buffer[r][c] = str(v)[0]
+            if color != None:
+                self.buffer[r][c] = colored(str(v)[0], color)
+            else:
+                self.buffer[r][c] = str(v)[0]
             return True
         return False
 
