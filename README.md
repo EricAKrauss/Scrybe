@@ -39,7 +39,7 @@ written and False otherwise.
 #### writing colored text
 Stored in the buffer with each character is an ANSI color sequence.  For your convenience, 
 many of these sequences are stored in `colors.py`.  By default, all characters are stored 
-in the buffer with `colors.DEFAULT`.
+in the buffer with `colors.DEFAULT`.  A list of ANSI sequences can be found [Here](http://bluesock.org/~willg/dev/ansi.html).
 
 #### .render()
 The render method will clear the console or terminal depending on your OS and then print the buffer.
