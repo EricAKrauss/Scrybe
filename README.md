@@ -1,19 +1,19 @@
 # Scrybe
 A python library to provide extensive control over terminal and console output
 
-## The cns object
-The cns object (short for console) is the primary way that you will use Scrybe.
+## The virtual_console object
+The virtual_console object is the primary way that you will use Scrybe.
 When created it can optionally take a settings object.  This will store most of the high-level
-information that the cns object needs.  The cns object has a buffer attribute that is a two-
+information that the virtual_console object needs.  The virtual_console object has a buffer attribute that is a two-
 dimensional list of characters.  The best way to use this is to use the write and map methods.
 
 ### Initializing the Object
-To start using a cns object: 
+To start using a virtual_console object: 
 ```
 import Scrybe.virtual_console
 
 //You may optionally include a settings object as an argument
-console = virtual_console.cns()
+console = virtual_console.virtual_console()
 ```
 
 ### Methods for Drawing to the Buffer
@@ -35,6 +35,13 @@ The map method takes a 2-dimension list of chars or a list of strings as the 2dV
 It then iterates through the 2dVal from left to right, top to bottom, placing each character
 in the buffer, starting at row / col.  This returns True if any characters were successfully 
 written and False otherwise.
+
+#### .map_color(color, row, col, width=1, height=1)
+The map_color method takes a single color value or a 2d list of color values.  It then maps
+the color/colors to the buffer starting at row / col.  If a single color is given, it will
+map that color to the buffer in each traversed spot.  If a 2d list of colors is given, the
+method will map colors to the buffer according to the list up to width-by-height.  If the
+width / height are larger than the given 2d list of colors, the colors will be tiled.
 
 #### writing colored text
 Stored in the buffer with each character is an ANSI color sequence.  For your convenience, 
