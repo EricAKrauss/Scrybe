@@ -30,15 +30,30 @@ class cns():
         for r in range(len(val)):
             for c in range(len(val[r])):
                 success = self.place(row+r, col+c, val[r][c], color) or success
+        return success
 
+    ## Maps a color to one space or a quadratic area of
+    ##   a size w*h
+    ##   Starts at r1 / c1 and progresses by w then by h
+    ##   color can be a 2d list of colors.  Will map
+    ##     each color to the buffer in place of the given color
+    ##   if the area that is being mapped is larger than the 2d
+    ##     list of colors, the first color in the map will be used
     def map_color(self, color, r1, c1, w=1, h=1):
         success = False
+        isColorMap = hasattr(color[-1], "__len__")
         for row in range(r1, r1+h, h/abs(h)):
             for col in range(c1, c2+w, w/abs(w)):
                 canPlace = (row in range(len(self.buffer)) and col in range(len(self.buffer[row])))
                 success = canPlace or success
-                self.buffer[row][col][-1] = color
-            
+                if not isColorMap:
+                    self.buffer[row][col][-1] = color
+                else:
+                    if row-r1 in range(len(colorMap)) and col-c1 in range(len(colorMap[row-r1])):
+                        self.buffer[row][col][-1] = colorMap[row-r1][col-c1]
+                    else:
+                        self.buffer[row][col][-1] = colorMap[0][0]
+        return success
 
     ## Print will write a string or a list of characters
     ##   to the buffer starting at row, col.
