@@ -31,6 +31,15 @@ class cns():
             for c in range(len(val[r])):
                 success = self.place(row+r, col+c, val[r][c], color) or success
 
+    def map_color(self, color, r1, c1, w=1, h=1):
+        success = False
+        for row in range(r1, r1+h, h/abs(h)):
+            for col in range(c1, c2+w, w/abs(w)):
+                canPlace = (row in range(len(self.buffer)) and col in range(len(self.buffer[row])))
+                success = canPlace or success
+                self.buffer[row][col][-1] = color
+            
+
     ## Print will write a string or a list of characters
     ##   to the buffer starting at row, col.
     ##   Print has three wrapping modes:
