@@ -67,7 +67,8 @@ class cns():
                     if row-r1 in range(len(color)) and col-c1 in range(len(color[row-r1])):
                         self.buffer[row][col][-1] = color[row-r1][col-c1]
                     else:
-                        self.buffer[row][col][-1] = color[0][0]
+                        print(row-r1 % len(color), col-c1, col-c1 % len(color[row-r1 % len(color)]) )
+                        self.buffer[row][col][-1] = color[row-r1 % len(color)][col-c1 % len(color[row-r1 % len(color)])]
         return success
 
     ## Print will write a string or a list of characters
