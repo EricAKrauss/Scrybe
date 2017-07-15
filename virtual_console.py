@@ -29,7 +29,7 @@ class cns():
         success = False
         for r in range(len(val)):
             for c in range(len(val[r])):
-                success = self.write(row+r, col+c, val[r][c], color) or success
+                success = self.place(row+r, col+c, val[r][c], color) or success
 
     ## Print will write a string or a list of characters
     ##   to the buffer starting at row, col.
@@ -37,7 +37,7 @@ class cns():
     ##     -1: Doesn't wrap at all
     ##      0: Wrap to the start of the next line
     ##      1: Wrap to the next line starting at r
-    def print(self, r, c, v, color=None, wrapping=-1):
+    def write(self, r, c, v, color=None, wrapping=-1):
         col = c
         row = r
         success = False
@@ -62,7 +62,7 @@ class cns():
         return success
 
     ## Returns True if it can write a char to the buffer
-    def write(self, r, c, v, color=None):
+    def place(self, r, c, v, color=None):
         buf = self.buffer
         if r < 0 or r >= len(buf):
             return False
