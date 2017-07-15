@@ -1,6 +1,7 @@
 import config
 import os, sys
 import colors
+from math import floor
 from user_input import get_input
 
 class cns():
@@ -12,6 +13,7 @@ class cns():
 
         ## Initialize Buffer
         self.clear_buffer()
+        self.get_input = get_input
 
     ## Simplifies attribute calls
     def __call__(self, string):
@@ -55,17 +57,17 @@ class cns():
     def map_color(self, color, r1, c1, w=1, h=1):
         success = False
         isColorMap = hasattr(color[-1], "__len__")
-        for row in range(r1, r1+h, h/abs(h)):
-            for col in range(c1, c2+w, w/abs(w)):
+        for row in range(r1, r1+h):
+            for col in range(c1, c1+w):
                 canPlace = (row in range(len(self.buffer)) and col in range(len(self.buffer[row])))
                 success = canPlace or success
                 if not isColorMap:
                     self.buffer[row][col][-1] = color
                 else:
-                    if row-r1 in range(len(colorMap)) and col-c1 in range(len(colorMap[row-r1])):
-                        self.buffer[row][col][-1] = colorMap[row-r1][col-c1]
+                    if row-r1 in range(len(color)) and col-c1 in range(len(color[row-r1])):
+                        self.buffer[row][col][-1] = color[row-r1][col-c1]
                     else:
-                        self.buffer[row][col][-1] = colorMap[0][0]
+                        self.buffer[row][col][-1] = color[0][0]
         return success
 
     ## Print will write a string or a list of characters
@@ -106,9 +108,9 @@ class cns():
             return False
         if hasattr(v, "__str__"):
             if color != None:
-                self.buffer[r][c] = (str(v)[0], color)
+                self.buffer[r][c] = [str(v)[0], color]
             else:
-                self.buffer[r][c] = (str(v)[0], colors.DEFAULT)
+                self.buffer[r][c] = [str(v)[0], colors.DEFAULT]
             return True
         return False
 
@@ -127,8 +129,8 @@ class cns():
     def clear_buffer(self):
         args = [self("terminal_rows"),
                 self("terminal_cols"),
-                (self("buffer_default"), colors.DEFAULT)]
-        self.buffer = init_array(*args)
+                self("buffer_default"), colors.DEFAULT]
+        self.buffer = init_buffer(*args)
         
     ## Clear the Console, print the buffer
     def render(self):
@@ -152,10 +154,14 @@ class cns():
 
 
 
-def init_array(r, c, default=(None, colors.DEFAULT)):
+def init_buffer(r, c, char=None, color=colors.DEFAULT):
     outArray = []
     for row in range(r):
         outArray.append([])
         for col in range(c):
-            outArray[-1].append(default)
+            outArray[-1].append([char, color])
     return outArray
+
+
+def __call__(*args, **kargs):
+    return cns(*args, **kargs)
