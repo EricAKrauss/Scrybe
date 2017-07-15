@@ -20,6 +20,19 @@ class cns():
         if hasattr(self.settings, string):
             return getattr(self.settings, string)
 
+    def __str__(self):
+        outString = ""
+        activeColor = colors.DEFAULT
+        outString += activeColor
+        for row in self.buffer:
+            for col in row:
+                if col[-1] != activeColor:
+                    activeColor = col[-1]
+                    outString += activeColor
+                outString += col[0]
+            outString += "\n"
+        return outString[:-1]
+
     ## Maps val to the buffer at row, col
     ##   Map is a 2d list of strings or characters
     ##   Starts at top left corner 
@@ -125,6 +138,7 @@ class cns():
     ## Prints the frame to the console in color
     def print_frame(self):
         activeColor = colors.DEFAULT
+        sys.stdout.write(activeColor)
 
         for r in self.buffer:
             for c in r:
