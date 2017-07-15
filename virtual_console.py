@@ -42,7 +42,6 @@ class cns():
         row = r
         success = False
         while len(v) > 0:
-            print(v)
             char = v[0]
             v = v[1:]
 
@@ -57,7 +56,7 @@ class cns():
             if row >= len(self.buffer):
                 return success
             
-            success = self.write(row, col, char, color) or success
+            success = self.place(row, col, char, color) or success
             col += 1
         return success
 
