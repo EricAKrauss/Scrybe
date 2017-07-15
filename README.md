@@ -16,9 +16,17 @@ import Scrybe.virtual_console
 console = virtual_console.cns()
 ```
 
-### .write(row, col, val)
-The write method will place the first character of the stringified val at row / col in the buffer.
-The write method will then return True or False depending on whether or not this was successful.
+### .place(row, col, val)
+The place method will place the first character of the stringified val at row / col in the buffer.
+The place method will then return True or False depending on whether or not this was successful.
+
+### .write(row, col, value, color=None, wrapping=0)
+The write method will insert a string or a list of characters into the buffer starting at row / col.  
+Where map will cut off anything outside of the buffer, .write will wrap around to the start of the 
+next row and continue.  The behavior of this can be modified by setting the wrapping key-argument.
+<br>`wrapping=-1` does not wrap.
+<br>`wrapping=0` wraps to the start of the next line.
+<br>`wrapping=1` wraps to col instead of the beginning.
 
 ### .map(row, col, 2dVal)
 The map method takes a 2-dimension list of chars or a list of strings as the 2dVal argument.
