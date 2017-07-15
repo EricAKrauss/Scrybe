@@ -1,5 +1,7 @@
 import config
 import os, sys
+import colors
+
 
 class cns():
     def __init__(self, settings=None):
@@ -11,17 +13,6 @@ class cns():
         ## Initialize Buffer
         self.clear_buffer()
 
-    ## String Override
-    def __str__(self):
-        outStr = ""
-        for r in self.buffer:
-            for c in r:
-                outStr += c
-            outStr += "\n"
-
-        ## Trims the last newline
-        return outStr[:-1]
-
     ## Simplifies attribute calls
     def __call__(self, string):
         if hasattr(self, string):
@@ -30,7 +21,7 @@ class cns():
             return getattr(self.settings, string)
 
     ## Maps val to the buffer at row, col
-    ##   Can map 2d values
+    ##   Map is a 2d list of strings or characters
     ##   Starts at top left corner 
     ##     proceeds from left to right, top to bottom
     ##   Returns True if it successfully writes anything
@@ -39,6 +30,36 @@ class cns():
         for r in range(len(val)):
             for c in range(len(val[r])):
                 success = self.write(row+r, col+c, val[r][c], color) or success
+
+    ## Print will write a string or a list of characters
+    ##   to the buffer starting at row, col.
+    ##   Print has three wrapping modes:
+    ##     -1: Doesn't wrap at all
+    ##      0: Wrap to the start of the next line
+    ##      1: Wrap to the next line starting at r
+    def print(self, r, c, v, color=None, wrapping=-1):
+        col = c
+        row = r
+        success = False
+        while len(v) > 0:
+            print(v)
+            char = v[0]
+            v = v[1:]
+
+            if col >= len(self.buffer[row]):
+                row += 1
+                if wrapping == -1:
+                    return success
+                if wrapping == 0:
+                    col = 0
+                if wrapping == 1:
+                    col = c
+            if row >= len(self.buffer):
+                return success
+            
+            success = self.write(row, col, char, color) or success
+            col += 1
+        return success
 
     ## Returns True if it can write a char to the buffer
     def write(self, r, c, v, color=None):
@@ -49,9 +70,9 @@ class cns():
             return False
         if hasattr(v, "__str__"):
             if color != None:
-                self.buffer[r][c] = colored(str(v)[0], color)
+                self.buffer[r][c] = (str(v)[0], color)
             else:
-                self.buffer[r][c] = str(v)[0]
+                self.buffer[r][c] = (str(v)[0], colors.DEFAULT)
             return True
         return False
 
@@ -70,17 +91,31 @@ class cns():
     def clear_buffer(self):
         args = [self("terminal_rows"),
                 self("terminal_cols"),
-                self("buffer_default")]
+                (self("buffer_default"), colors.DEFAULT)]
         self.buffer = init_array(*args)
         
     ## Clear the Console, print the buffer
     def render(self):
         self.clear_console()
-        print(self)
+        self.print_frame()
+
+    ## Prints the frame to the console in color
+    def print_frame(self):
+        activeColor = colors.DEFAULT
+
+        for r in self.buffer:
+            for c in r:
+                if c[1] != activeColor:
+                    activeColor = c[1]
+                    sys.stdout.write(activeColor)
+
+                print(c[0], end="")
+            print("\n", end="")
+        print()
 
 
 
-def init_array(r, c, default=None):
+def init_array(r, c, default=(None, colors.DEFAULT)):
     outArray = []
     for row in range(r):
         outArray.append([])
