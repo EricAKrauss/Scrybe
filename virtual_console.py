@@ -1,7 +1,7 @@
 import config
 import os, sys
 import colors
-
+from user_input import get_input
 
 class cns():
     def __init__(self, settings=None):
