@@ -36,6 +36,11 @@ It then iterates through the 2dVal from left to right, top to bottom, placing ea
 in the buffer, starting at row / col.  This returns True if any characters were successfully 
 written and False otherwise.
 
+#### .map_buffer(row, col, buffer) // Not yet implemented
+This method will take a buffer and write its contents to the called object's buffer.  This 
+will be implemented after the buffer is split into its own object that the virtual_console 
+object will manage.
+
 #### .map_color(color, row, col, width=1, height=1)
 The map_color method takes a single color value or a 2d list of color values.  It then maps
 the color/colors to the buffer starting at row / col.  If a single color is given, it will
@@ -75,3 +80,10 @@ can continue while waiting for user input.  This would likely take the form of a
 Pauses the application and writes a box with the provided text to the screen.  The box will contain an empty 
 line that the user writes to.  The user can delete text with backspace.  The written string will be returned 
 when the user presses enter.
+
+## The Future
+By version 1.0 the following will have been accomplished:
+1. The buffer will be split into its own object
+2. The virtual_console object will manage a buffer object
+3. .get_input must work on Linux systems
+4. .query must be implemented
