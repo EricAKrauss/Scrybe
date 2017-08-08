@@ -17,7 +17,7 @@ class virtual_console():
             self.settings = config.settings()
 
         ## Initialize Buffer
-        self.buffer = vc_buffer.VC_Buffer(self.settings)
+        self.buffer = vc_buffer.vc_buffer(self.settings)
         self.get_input = user_input.get_input
 
     ## Simplifies attribute calls
