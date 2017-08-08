@@ -7,7 +7,7 @@ When created it can optionally take a settings object.  This will store most of 
 information that the virtual_console object needs.  The virtual_console object has a buffer attribute that is a two-
 dimensional list of characters.  The best way to use this is to use the write and map methods.
 
-### Initializing the Object
+### Initializing the Virtual Console Object
 To start using a virtual_console object: 
 ```
 import Scrybe.virtual_console
@@ -15,6 +15,46 @@ import Scrybe.virtual_console
 //You may optionally include a settings object as an argument
 console = virtual_console.virtual_console()
 ```
+
+### Using the Virtual Console
+
+#### .render()
+The render method will clear the console or terminal depending on your OS and then print the buffer.
+This does not clear the buffer.  When rendering starts, the "active color" is set to `colors.DEFAULT` 
+and that color is written to the stdout stream.  Whenever a color other than the active color is detected 
+that color is written to stdout and it becomes the active color.
+
+#### .clear_console()
+Clears the console / terminal using `os.system("clear")` on Unix and `os.system("clr")` on Windows.
+
+### Methods for User Input
+
+#### .get_input()
+Pauses the application and waits for any non-modifier key to be pressed.  This does not currently return 
+`<SHIFT>`, `<CTRL>`, `<TAB>`, etc presses, but will return both capital letters and symbols.  
+<br>In the future, I would like to be able to return these special keys instead.  I would also like to 
+find a way to optionally spin off the get_input() call as a separate thread or task so that the application 
+can continue while waiting for user input.  This would likely take the form of a user_input object.
+
+#### .query(text="Press Enter to Continue...") //Not made yet
+Pauses the application and writes a box with the provided text to the screen.  The box will contain an empty 
+line that the user writes to.  The user can delete text with backspace.  The written string will be returned 
+when the user presses enter.
+
+## The VC_Buffer Object
+Sits underneath every virtual_console object.  Any method of a buffer object can be executed directly to the 
+virtual_console object.  The call will be passed along from the virtual_console to its buffer object using
+the __getattr__ implementation.
+
+### Initializing a VC_Buffer Object
+To start using a vc_buffer object
+```
+import Scrybe.vc_buffer()
+
+//You may optionally include a settings object as an argument
+buffer = vc_buffer.vc_buffer()
+```
+It is recommended that you use a virtual_console object to retrieve and interpret the contents of a vc_buffer object.
 
 ### Methods for Drawing to the Buffer
 
@@ -53,37 +93,13 @@ Stored in the buffer with each character is an ANSI color sequence.  For your co
 many of these sequences are stored in `colors.py`.  By default, all characters are stored 
 in the buffer with `colors.DEFAULT`.  A list of ANSI sequences can be found [Here](http://bluesock.org/~willg/dev/ansi.html).
 
-#### .render()
-The render method will clear the console or terminal depending on your OS and then print the buffer.
-This does not clear the buffer.  When rendering starts, the "active color" is set to `colors.DEFAULT` 
-and that color is written to the stdout stream.  Whenever a color other than the active color is detected 
-that color is written to stdout and it becomes the active color.
-
 #### .clear_buffer()
 The clear_buffer method will reset the buffer to be a 2d list of values.  The default values in the
 new buffer are equal to `settings.buffer_default` and the dimensions are equal to `settings.terminal_rows`
 and `settings.terminal_cols`.
 
-#### .clear_console()
-Clears the console / terminal using `os.system("clear")` on Unix and `os.system("clr")` on Windows.
-
-### Methods for User Input
-
-#### .get_input()
-Pauses the application and waits for any non-modifier key to be pressed.  This does not currently return 
-`<SHIFT>`, `<CTRL>`, `<TAB>`, etc presses, but will return both capital letters and symbols.  
-<br>In the future, I would like to be able to return these special keys instead.  I would also like to 
-find a way to optionally spin off the get_input() call as a separate thread or task so that the application 
-can continue while waiting for user input.  This would likely take the form of a user_input object.
-
-#### .query(text="Press Enter to Continue...") //Not made yet
-Pauses the application and writes a box with the provided text to the screen.  The box will contain an empty 
-line that the user writes to.  The user can delete text with backspace.  The written string will be returned 
-when the user presses enter.
-
 ## The Future
 By version 1.0 the following will have been accomplished:
-1. The buffer will be split into its own object
-2. The virtual_console object will manage a buffer object
-3. .get_input must work on Linux systems
-4. .query must be implemented
+1. Write automated tests for feature set
+2. .get_input must work on Linux systems
+3. .query must be implemented
