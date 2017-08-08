@@ -20,6 +20,11 @@ class virtual_console():
         self.buffer = buffer
         if self.buffer == None:
             self.buffer = vc_buffer.vc_buffer(self.settings)
+        else:
+            ##Override settings with included buffer's settings
+            self.settings = self.buffer.settings
+
+        ## Define get_input method
         self.get_input = user_input.get_input
 
     ## Simplifies attribute calls
