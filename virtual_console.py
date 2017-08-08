@@ -1,10 +1,13 @@
-import config
 import os, sys
-import colors
 from math import floor
-from user_input import get_input
 
-class cns():
+if __name__ == "__main__":
+    import config, colors, user_input
+else:
+    from Scrybe import config, colors
+    from Scrybe import user_input
+
+class virtual_console():
     def __init__(self, settings=None):
         ## Initialize Settings
         self.settings = settings
@@ -13,14 +16,11 @@ class cns():
 
         ## Initialize Buffer
         self.clear_buffer()
-        self.get_input = get_input
+        self.get_input = user_input.get_input
 
     ## Simplifies attribute calls
-    def __call__(self, string):
-        if hasattr(self, string):
-            return getattr(self, string)
-        if hasattr(self.settings, string):
-            return getattr(self.settings, string)
+    def __getattr__(self, string):
+       return getattr(self.settings, string)
 
     def __str__(self):
         outString = ""
@@ -118,19 +118,19 @@ class cns():
 
     ## Clears the Console/Terminal
     def clear_console(self):
-        if self("os") == "Windows":
+        if self.os == "Windows":
             cmd = os.system('cls')
             return
-        if self("os") == "Unix":
+        if self.os == "Unix":
             cmd = os.system("clear")
             return
         return os.system("clear")
 
     ## Clears the internal text buffer
     def clear_buffer(self):
-        args = [self("terminal_rows"),
-                self("terminal_cols"),
-                self("buffer_default"), colors.DEFAULT]
+        args = [self.terminal_rows,
+                self.terminal_cols,
+                self.buffer_default, colors.DEFAULT]
         self.buffer = init_buffer(*args)
         
     ## Clear the Console, print the buffer
@@ -162,7 +162,3 @@ def init_buffer(r, c, char=None, color=colors.DEFAULT):
         for col in range(c):
             outArray[-1].append([char, color])
     return outArray
-
-
-def __call__(*args, **kargs):
-    return cns(*args, **kargs)

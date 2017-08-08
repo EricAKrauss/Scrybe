@@ -1,4 +1,10 @@
-import config
+if __name__ == "__main__":
+    import config
+else:
+    try:
+        from Scrybe import config
+    except ImportError:
+        import config
 
 os = config.getOS()
 if os == "Windows":
