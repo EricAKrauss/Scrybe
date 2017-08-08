@@ -7,9 +7,12 @@ else:
     except ImportError:
         import config, colors
 
-class VC_Buffer():
-    def __init__(self, settings):
-        self.settings = settings
+class vc_buffer():
+    def __init__(self, settings=None):
+        if settings != None:
+            self.settings = settings
+        else:
+            self.settings = config.settings()
         self.clear_buffer()
 
     def __iter__(self):
