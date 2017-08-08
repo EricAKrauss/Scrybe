@@ -13,6 +13,8 @@ To start using a virtual_console object:
 import Scrybe.virtual_console
 
 //You may optionally include a settings object as an argument
+//You may include a vc_buffer object as an argument, but this will set the newly created
+//  virtual_console's settings object to point to the included vc_buffer's settings object
 console = virtual_console.virtual_console()
 ```
 
