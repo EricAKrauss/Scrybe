@@ -10,14 +10,16 @@ else:
     from Scrybe import vc_buffer
 
 class virtual_console():
-    def __init__(self, settings=None):
+    def __init__(self, settings=None, buffer=None):
         ## Initialize Settings
         self.settings = settings
         if self.settings == None:
             self.settings = config.settings()
 
         ## Initialize Buffer
-        self.buffer = vc_buffer.vc_buffer(self.settings)
+        self.buffer = buffer
+        if self.buffer == None:
+            self.buffer = vc_buffer.vc_buffer(self.settings)
         self.get_input = user_input.get_input
 
     ## Simplifies attribute calls
